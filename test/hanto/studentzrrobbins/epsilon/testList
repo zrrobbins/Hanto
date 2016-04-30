@@ -1,0 +1,10 @@
+Tests for EpsilonHanto
+X Place Horse
+- Horse tries to jump over one empty spot (FAIL)
+- Horse tries to move to spot next to itself
+- Horse tries to jump over 3 spots (filled - empty - filled) (FAIL)
+- Horse tries to jump over 1 spot successfully
+- Horse tries to jump over 4 spots successfully
+- Horse tries to jump to same position (FAIL)
+- Horse ends up non contiguous (FAIL)
+- Horse jumps to win
