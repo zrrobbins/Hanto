@@ -11,6 +11,7 @@
  *******************************************************************************/
 package hanto.studentzrrobbins.common;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +25,10 @@ import static hanto.common.HantoPieceType.*;
  * @author zrrobbins
  *
  */
-public class HantoPlayerState 
+public class HantoPlayerState implements Serializable
 {
+	private static final long serialVersionUID = 3163948049959678708L;
+	
 	private HantoPlayerColor color;
 	private Map<HantoPieceType, Integer> stockPile;
 	private boolean hasPlayedButterfly;

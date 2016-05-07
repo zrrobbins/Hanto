@@ -15,7 +15,9 @@ import static hanto.common.HantoPieceType.*;
 import static hanto.common.HantoPlayerColor.*;
 import static hanto.common.MoveResult.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +31,10 @@ import hanto.tournament.HantoMoveRecord;
  * @author zrrobbins
  *
  */
-public class BaseHantoGame implements HantoGame 
+public class BaseHantoGame implements HantoGame, Serializable
 {
+	private static final long serialVersionUID = -4077150454733680909L;
+	
 	protected final HantoPlayerColor movesFirst;
 	protected final HantoBoard board;
 	protected HantoPieceType typeOfPieceMoving;
@@ -68,31 +72,6 @@ public class BaseHantoGame implements HantoGame
 		playerCanResign = true;
 		movementStrategies = new HashMap<HantoPieceType, MoveValidatorStrategy>();
 	}
-	
-	
-	/**
-	 * Copy constructor to create a new instance of a HantoBaseGame from another instance of HantoBaseGame
-	 * @param another - an instance of HantoBaseGame
-	 */
-	public BaseHantoGame(BaseHantoGame another) {
-		this.movesFirst = another.movesFirst;
-		this.board = another.board; //needs to be copy
-		this.typeOfPieceMoving = another.typeOfPieceMoving;
-		this.moveTo = another.moveTo;
-		this.moveFrom = another.moveFrom;
-		this.currentPlayerColor = another.currentPlayerColor; //needs to be copy
-		this.moveNumber = another.moveNumber; // needs to be copy
-		this.gameTurn = another.gameTurn; //needs to be copy
-		this.blueButterflyLocation = another.blueButterflyLocation;
-		this.redButterflyLocation = another.redButterflyLocation;
-		this.bluePlayerState = another.bluePlayerState;
-		this.redPlayerState = another.redPlayerState;
-		this.currentPlayerState = another.currentPlayerState;
-		this.maxTurns = another.maxTurns;
-		this.playerCanResign = another.playerCanResign;
-		this.movementStrategies = another.movementStrategies;
-	}
-	
 	
 	@Override
 	/*
@@ -153,6 +132,7 @@ public class BaseHantoGame implements HantoGame
 	/**
 	 * Method that is called to end game if a player resigns
 	 * @return opposing player win condition
+	 * @throws HantoPrematureResignationException
 	 */
 	protected MoveResult playerResigns() throws HantoPrematureResignationException
 	{
@@ -314,32 +294,9 @@ public class BaseHantoGame implements HantoGame
 	public List<HantoMoveRecord> generateAllPossibleMoves() 
 	{
 		List<HantoMoveRecord> possibleMoves = new ArrayList<HantoMoveRecord>();
-		
-		/* FOR CURRENT PLAYER:
-		 * 
-		 * for each piece type not placed ONLY GENERATE ONE SET OF MOVES FOR EACH NON PLACED PIECE TYPE
-		 * i.e. if we have three unplaced crabs, we don't want to generate 3 identical possible move sets
-		 * 
-		 * for each piece already on the board, generate all possible moves
-		 * 
-		 * how to generate placement moves for a piece:
-		 * - if first move, only valid spot is origin
-		 * - if second move, only valid spot is adjacent to origin
-		 * - if 3rd or greater move, generate a list of all empty spots adjacent to at least one piece
-		 * 		- ArrayList<HantoCoordinateImpl> generateFrontier()
-		 * - filter the list to include only piece adjacent to at least one friendly and not adjacent to any enemies
-		 * 		- ArrayList<HantoCoordinateImpl> filterFrontierForPlacement()
-		 * 
-		 * how to generate movement moves for a piece:
-		 * - if butterfly is not placed, no moves possible
-		 * - generate a list of all adjacent spots adjacent to at least one piece
-		 * 		- generateFrontier()
-		 * - for each piece of a type, use its move verifier on each spot in frontier and record if movable and what
-		 * result would be 
-		 */
 		List<HantoCoordinateImpl> frontier = getFrontier();
 		
-		moveFrom = null;
+		
 		// Generate all placement move possibilities for each piece type currently in stockpile
 		for(HantoPieceType pieceType : HantoPieceType.values()){
 			if (currentPlayerState.piecesOfTypeLeftInStockPile(pieceType) > 0) {
@@ -347,9 +304,11 @@ public class BaseHantoGame implements HantoGame
 					try {
 						typeOfPieceMoving = pieceType;
 						moveTo = coord;
+						moveFrom = null;
 						preMoveCheck();
 						possibleMoves.add(new HantoMoveRecord(pieceType, null, moveTo));
 					} catch (HantoException e) {
+						e.getMessage();
 						//System.out.println("EXCEPTION when generating placement moves: " + e.getMessage());
 					}
 				}
@@ -366,37 +325,11 @@ public class BaseHantoGame implements HantoGame
 					preMoveCheck();
 					possibleMoves.add(new HantoMoveRecord(board.getPieceAt(pieceCoord).getType(), moveFrom, moveTo));
 				} catch (HantoException e) {
+					e.getMessage();
 					//System.out.println("EXCEPTION when generating movement moves: " + e.getMessage());
 				}
 			}
 		}
-		
-		
-		System.out.println("Possible Moves: ");
-		int fromX, fromY, toX, toY;
-		HantoPieceType type;
-		HantoPlayerColor color;
-		System.out.println("Number of possible moves: " + possibleMoves.size());
-		
-		for(HantoMoveRecord move : possibleMoves) {
-			move.getFrom();
-			if (move.getFrom() != null) {
-				fromX = move.getFrom().getX();
-				fromY = move.getFrom().getY();
-			}
-			else {
-				fromX = Integer.MAX_VALUE;
-				fromY = Integer.MAX_VALUE;
-			}
-			
-			toX = move.getTo().getX();
-			toY = move.getTo().getY();
-			type = move.getPiece() != null ? move.getPiece() : null;
-			color = currentPlayerColor;
-			System.out.println("Color: " + color + "\t" + "Type: " + type + "\t" + "fromX: " + fromX + "\t" + "fromY: " + fromY 
-					+ "\t" + "toX: " + toX + "\t" + "toY: " + toY + "\n");
-		}
-		
 		return possibleMoves;
 	}
 	
@@ -466,7 +399,12 @@ public class BaseHantoGame implements HantoGame
 		HantoPlayerColor color;
 		String resultString = "Current Board:\n";
 		
-		for(HantoCoordinateImpl coord : board.getCoordinateSet()) {
+		
+		List<HantoCoordinateImpl> coordSet = new ArrayList<HantoCoordinateImpl>();
+		coordSet.addAll(board.getCoordinateSet());
+		Collections.sort(coordSet, (left, right) -> getPieceAt(left).getColor().compareTo(getPieceAt(right).getColor()));
+		
+		for(HantoCoordinateImpl coord : coordSet) {
 			x = coord.getX();
 			y = coord.getY();
 			type = getPieceAt(coord) != null ? getPieceAt(coord).getType() : null;

@@ -10,6 +10,7 @@
 
 package hanto.studentzrrobbins.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,10 @@ import hanto.studentzrrobbins.common.movevalidators.WalkValidator;
  * Implementation of the HantoPiece.
  * @version Mar 2,2016
  */
-public class HantoPieceImpl implements HantoPiece
+public class HantoPieceImpl implements HantoPiece, Serializable
 {
+	private static final long serialVersionUID = -5103239719783215352L;
+	
 	private final HantoPlayerColor color;
 	private final HantoPieceType type;
 	private List<MoveValidatorStrategy> moveValidators = new ArrayList<MoveValidatorStrategy>();

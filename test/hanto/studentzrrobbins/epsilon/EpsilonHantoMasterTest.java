@@ -1295,7 +1295,7 @@ public class EpsilonHantoMasterTest
 	@Test	// 79
 	public void redPlacesSparrowFirst() throws HantoException
 	{
-		blueGame = factory.makeHantoGame(HantoGameID.DELTA_HANTO, RED);
+		blueGame = factory.makeHantoGame(HantoGameID.EPSILON_HANTO, RED);
 		final MoveResult mr = blueGame.makeMove(SPARROW, null, makeCoordinate(0, 0));
 		assertEquals(OK, mr);
 	}

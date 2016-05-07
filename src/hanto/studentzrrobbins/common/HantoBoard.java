@@ -11,6 +11,7 @@
  *******************************************************************************/
 package hanto.studentzrrobbins.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +26,10 @@ import hanto.common.*;
  * @author zrrobbins
  *
  */
-public class HantoBoard 
+public class HantoBoard implements Serializable
 {
+	private static final long serialVersionUID = -8946320793430709358L;
+	
 	private Map<HantoCoordinateImpl, HantoPiece> board;
 	private List<HantoCoordinateImpl> visited;
 	private int numPieces;

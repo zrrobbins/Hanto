@@ -12,14 +12,18 @@
 
 package hanto.studentzrrobbins.common;
 
+import java.io.Serializable;
+
 import hanto.common.HantoCoordinate;
 
 /**
  * The implementation for my version of Hanto.
  * @version Mar 2, 2016
  */
-public class HantoCoordinateImpl implements HantoCoordinate
+public class HantoCoordinateImpl implements HantoCoordinate, Serializable
 {
+	private static final long serialVersionUID = 291145770651930613L;
+	
 	final private int x, y;
 	
 	/**

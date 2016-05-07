@@ -1,29 +1,43 @@
+/*******************************************************************************
+ * This files was developed for CS4233: Object-Oriented Analysis & Design.
+ * The course was taken at Worcester Polytechnic Institute.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Copyright ©2016 Gary F. Pollice
+ *******************************************************************************/
+
 package hanto.studentzrrobbins.common.movevalidators;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import hanto.common.HantoException;
 import hanto.studentzrrobbins.common.HantoBoard;
 import hanto.studentzrrobbins.common.HantoCoordinateImpl;
 
-public class JumpValidator implements MoveValidatorStrategy {
+/**
+ * Implementation of MoveValidatorStrategy to represent the Jump move in Hanto
+ * @author zrrobbins
+ *
+ */
+public class JumpValidator implements MoveValidatorStrategy, Serializable {
 
+	private static final long serialVersionUID = -4270444671672851612L;
+	
 	private boolean pathFound;
 	private HantoBoard board;
-	private Map<HantoCoordinateImpl, HantoCoordinateImpl> cameFrom;
-	private List<HantoCoordinateImpl> path;
 	private List<HantoCoordinateImpl> visited;
 	
 	/**
 	 * Default constructor
 	 */
 	public JumpValidator() {
-		path = new ArrayList<HantoCoordinateImpl>();
 		visited = new ArrayList<HantoCoordinateImpl>();
-		cameFrom = new HashMap<HantoCoordinateImpl, HantoCoordinateImpl>();
 	}
 	
 	
@@ -59,6 +73,7 @@ public class JumpValidator implements MoveValidatorStrategy {
 			throw new HantoException("Invalid move, jump must be in a straight line!");
 		}
 		
+		visited.clear();
 		checkJumpPathValidity(from, to);
 		
 		return pathFound;

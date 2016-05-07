@@ -15,6 +15,7 @@ import static hanto.common.HantoGameID.*;
 import static hanto.common.HantoPieceType.*;
 import static hanto.common.HantoPlayerColor.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,6 @@ import hanto.common.HantoPlayerColor;
 import hanto.common.HantoPrematureResignationException;
 import hanto.common.MoveResult;
 import hanto.studentzrrobbins.common.BaseHantoGame;
-import hanto.studentzrrobbins.common.HantoMove;
 import hanto.studentzrrobbins.common.HantoPlayerStateFactory;
 import hanto.studentzrrobbins.common.movevalidators.FlyValidator;
 import hanto.studentzrrobbins.common.movevalidators.JumpValidator;
@@ -36,7 +36,9 @@ import hanto.tournament.HantoMoveRecord;
  * @author zrrobbins
  *
  */
-public class EpsilonHantoGame extends BaseHantoGame implements HantoGame {
+public class EpsilonHantoGame extends BaseHantoGame implements HantoGame, Serializable {
+
+	private static final long serialVersionUID = -8282900129076476061L;
 
 	/**
 	 * Creates a EpsilonHantoGame with desired color as first move. This constructor should only ever be called by HantoGameFactory!
@@ -61,12 +63,10 @@ public class EpsilonHantoGame extends BaseHantoGame implements HantoGame {
 	protected MoveResult playerResigns() throws HantoPrematureResignationException {		
 		List<HantoMoveRecord> possibleMoves = new ArrayList<HantoMoveRecord>();
 		possibleMoves = generateAllPossibleMoves(); // generate all possible moves AND placements		
-		if (!possibleMoves.isEmpty()) {
+		if (!possibleMoves.isEmpty() || gameTurn == 1) {
 			throw new HantoPrematureResignationException();
 		}	
 		return super.playerResigns();
 	}
-	
-	
 }
 

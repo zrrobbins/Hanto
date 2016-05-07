@@ -11,6 +11,8 @@
  *******************************************************************************/
 package hanto.studentzrrobbins.common.movevalidators;
 
+import java.io.Serializable;
+
 import hanto.common.HantoException;
 import hanto.studentzrrobbins.common.HantoBoard;
 import hanto.studentzrrobbins.common.HantoCoordinateImpl;
@@ -21,8 +23,10 @@ import hanto.studentzrrobbins.common.HantoCoordinateImpl;
  * @author zrrobbins
  *
  */
-public class FlyValidator implements MoveValidatorStrategy {
+public class FlyValidator implements MoveValidatorStrategy, Serializable {
 
+	private static final long serialVersionUID = 3682356342150592742L;
+	
 	private int maxFlyDistance;
 	
 	/**

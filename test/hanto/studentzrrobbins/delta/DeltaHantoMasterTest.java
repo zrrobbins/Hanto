@@ -263,7 +263,7 @@ public class DeltaHantoMasterTest
 		assertEquals(OK, redGame.makeMove(SPARROW, new TestHantoCoordinate(0,1), new TestHantoCoordinate(1,0)));
 	}
 	
-	@Test	// 20
+	@Test(expected=HantoException.class)	// 20
 	public void redSparrowFlies1SpotBreaksContiguity() throws HantoException
 	{
 		redGame.makeMove(BUTTERFLY, null, new TestHantoCoordinate(0,0));

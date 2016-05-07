@@ -11,6 +11,7 @@
  *******************************************************************************/
 package hanto.studentzrrobbins.common.movevalidators;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,9 @@ import hanto.studentzrrobbins.common.HantoCoordinateImpl;
  * @author zrrobbins
  *
  */
-public class WalkValidator implements MoveValidatorStrategy {
+public class WalkValidator implements MoveValidatorStrategy, Serializable {
+	
+	private static final long serialVersionUID = 5211350482182244278L;
 	
 	private int maxWalkDistance;
 	private boolean pathFound;

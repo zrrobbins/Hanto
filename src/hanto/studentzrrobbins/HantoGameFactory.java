@@ -75,6 +75,8 @@ public class HantoGameFactory
 				break;
 			case EPSILON_HANTO:
 				game = new EpsilonHantoGame(movesFirst);
+		default:
+			break;
 		}
 		return game;
 	}
